@@ -1,9 +1,6 @@
 # Gradle
 .gradle/
-.gradletasknamecache
 build/
-!src/**/build/
-gradle-app.setting
 
 # Gradle wrapper (keep these)
 !gradle-wrapper.jar
@@ -12,15 +9,9 @@ gradle-app.setting
 # IDE
 .idea/
 *.iml
-*.iws
-*.ipr
-.classpath
-.project
-.settings/
 
 # Build output
 *.class
-*.jar
 *.aar
 *.apk
 out/
@@ -30,14 +21,3 @@ gen/
 # OS
 .DS_Store
 Thumbs.db
-
-# Temp
-*.log
-*.tmp
-*.swp
-*.swo
-*~
-
-# Keystore
-*.jks
-*.keystore
