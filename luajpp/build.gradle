@@ -1,0 +1,100 @@
+plugins {
+    alias(libs.plugins.android.library)
+    id 'maven-publish'
+}
+
+// 为所有 Java 编译任务启用废弃 API 检测，编译时会在控制台输出使用了废弃 API 的具体位置
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '-Xlint:deprecation'
+}
+
+android {
+    namespace 'com.androlua'
+    compileSdk 37
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 36
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false  // 禁用混淆
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+
+    // For JitPack: ensure AAR sources are published
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+}
+
+dependencies {
+    implementation libs.dexmaker
+
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.appcompat.resources
+    implementation libs.androidx.core
+    implementation libs.androidx.documentfile
+    implementation libs.androidx.preference
+
+    implementation libs.androidx.activity
+    implementation libs.androidx.fragment
+    implementation libs.androidx.transition
+    implementation libs.androidx.viewpager2
+
+    implementation libs.glide
+    annotationProcessor libs.glide.compiler
+    implementation libs.material
+}
+
+// ── JitPack publishing configuration ──────────────────────────────────────
+// JitPack sets the 'version' project property automatically from the Git tag.
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'com.github.huajiqaq'
+                artifactId = 'luajpp'
+                // version is taken from the Git tag by JitPack
+
+                pom {
+                    name = 'LUAJPP'
+                    description = 'An Android library for Lua scripting integration'
+                    url = 'https://github.com/huajiqaq/luajpp'
+
+                    licenses {
+                        license {
+                            name = 'MIT License'
+                            url = 'https://opensource.org/licenses/MIT'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'huajiqaq'
+                            name = 'huajiqaq'
+                        }
+                    }
+
+                    scm {
+                        connection = 'scm:git:git://github.com/huajiqaq/luajpp.git'
+                        developerConnection = 'scm:git:ssh://github.com/huajiqaq/luajpp.git'
+                        url = 'https://github.com/huajiqaq/luajpp'
+                    }
+                }
+            }
+        }
+    }
+}
